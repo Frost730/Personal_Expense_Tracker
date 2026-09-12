@@ -188,7 +188,7 @@ export const Transactions: React.FC = () => {
                 setSearchTerm(e.target.value);
                 setCurrentPage(1);
               }}
-              className="w-full pl-9 pr-4 py-2 text-sm rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-white placeholder-slate-400 focus:outline-hidden focus:ring-2 focus:ring-blue-500"
+              className="w-full pl-9 pr-4 py-2.5 sm:py-2 text-base sm:text-sm rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-white placeholder-slate-400 focus:outline-hidden focus:ring-2 focus:ring-blue-500"
             />
           </div>
 
@@ -250,7 +250,7 @@ export const Transactions: React.FC = () => {
                   setFilterCategory(e.target.value);
                   setCurrentPage(1);
                 }}
-                className="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-900 dark:text-white"
+                className="w-full px-3 py-2.5 sm:py-2 text-base sm:text-sm rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-900 dark:text-white"
               >
                 <option value="all">All Categories</option>
                 {categories.map((c) => (
@@ -272,7 +272,7 @@ export const Transactions: React.FC = () => {
                   setFilterPayment(e.target.value);
                   setCurrentPage(1);
                 }}
-                className="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-900 dark:text-white"
+                className="w-full px-3 py-2.5 sm:py-2 text-base sm:text-sm rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-900 dark:text-white"
               >
                 <option value="all">All Methods</option>
                 {PAYMENT_METHODS.map((pm) => (
@@ -295,7 +295,7 @@ export const Transactions: React.FC = () => {
                   setStartDate(e.target.value);
                   setCurrentPage(1);
                 }}
-                className="w-full px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-900 dark:text-white"
+                className="w-full px-3 py-2.5 sm:py-1.5 text-base sm:text-sm rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-900 dark:text-white"
               />
             </div>
 
@@ -310,7 +310,7 @@ export const Transactions: React.FC = () => {
                   setEndDate(e.target.value);
                   setCurrentPage(1);
                 }}
-                className="w-full px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-900 dark:text-white"
+                className="w-full px-3 py-2.5 sm:py-1.5 text-base sm:text-sm rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-900 dark:text-white"
               />
             </div>
 
@@ -327,7 +327,7 @@ export const Transactions: React.FC = () => {
                   setMinAmount(e.target.value);
                   setCurrentPage(1);
                 }}
-                className="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-900 dark:text-white"
+                className="w-full px-3 py-2.5 sm:py-2 text-base sm:text-sm rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-900 dark:text-white"
               />
             </div>
 
@@ -343,7 +343,7 @@ export const Transactions: React.FC = () => {
                   setMaxAmount(e.target.value);
                   setCurrentPage(1);
                 }}
-                className="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-900 dark:text-white"
+                className="w-full px-3 py-2.5 sm:py-2 text-base sm:text-sm rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-900 dark:text-white"
               />
             </div>
 
@@ -546,15 +546,17 @@ export const Transactions: React.FC = () => {
                     <div className="flex items-center gap-2">
                       <button
                         onClick={() => setEditingTransaction(tx)}
-                        className="p-1 rounded-md text-slate-400 hover:text-blue-600"
+                        aria-label="Edit transaction"
+                        className="p-2 rounded-lg text-slate-500 hover:text-blue-600 bg-slate-100 dark:bg-slate-800/80 active:scale-95 transition-all"
                       >
-                        <Edit2 className="w-3.5 h-3.5" />
+                        <Edit2 className="w-4 h-4" />
                       </button>
                       <button
                         onClick={() => setDeletingId(tx.id)}
-                        className="p-1 rounded-md text-slate-400 hover:text-rose-600"
+                        aria-label="Delete transaction"
+                        className="p-2 rounded-lg text-slate-500 hover:text-rose-600 bg-slate-100 dark:bg-slate-800/80 active:scale-95 transition-all"
                       >
-                        <Trash2 className="w-3.5 h-3.5" />
+                        <Trash2 className="w-4 h-4" />
                       </button>
                     </div>
                   </div>

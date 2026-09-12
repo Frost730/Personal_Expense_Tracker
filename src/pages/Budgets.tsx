@@ -157,10 +157,11 @@ export const Budgets: React.FC = () => {
             setEditingBudget(null);
             setIsBudgetModalOpen(true);
           }}
-          className="inline-flex items-center gap-2 px-3.5 py-2 text-xs font-semibold rounded-xl text-white bg-blue-600 hover:bg-blue-700 shadow-xs transition-colors"
+          className="inline-flex items-center gap-1.5 px-3 py-2 sm:px-3.5 text-xs font-semibold rounded-xl text-white bg-blue-600 hover:bg-blue-700 shadow-xs transition-colors shrink-0"
         >
           <Plus className="w-4 h-4" />
-          <span>Set Category Budget</span>
+          <span className="hidden sm:inline">Set Category Budget</span>
+          <span className="sm:hidden">Set Budget</span>
         </button>
       </div>
 
@@ -262,23 +263,25 @@ export const Budgets: React.FC = () => {
                   <span className="text-slate-400 text-[11px]">
                     Month: {formatMonth(item.budget.month)}
                   </span>
-                  <div className="flex items-center gap-1">
+                  <div className="flex items-center gap-1.5">
                     <button
                       onClick={() => {
                         setEditingBudget(item.budget);
                         setIsBudgetModalOpen(true);
                       }}
-                      className="p-1.5 rounded-lg text-slate-400 hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-950/40 transition-colors"
+                      className="p-2 rounded-lg text-slate-400 hover:text-blue-600 bg-slate-50 dark:bg-slate-800/80 hover:bg-blue-50 dark:hover:bg-blue-950/40 active:scale-95 transition-all"
                       title="Edit Target"
+                      aria-label="Edit Target"
                     >
-                      <Edit2 className="w-4 h-4" />
+                      <Edit2 className="w-3.5 h-3.5" />
                     </button>
                     <button
                       onClick={() => setDeletingId(item.budget.id)}
-                      className="p-1.5 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/40 transition-colors"
+                      className="p-2 rounded-lg text-slate-400 hover:text-rose-600 bg-slate-50 dark:bg-slate-800/80 hover:bg-rose-50 dark:hover:bg-rose-950/40 active:scale-95 transition-all"
                       title="Delete Budget"
+                      aria-label="Delete Budget"
                     >
-                      <Trash2 className="w-4 h-4" />
+                      <Trash2 className="w-3.5 h-3.5" />
                     </button>
                   </div>
                 </div>

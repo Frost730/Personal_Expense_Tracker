@@ -134,7 +134,7 @@ export const CategoryModal: React.FC<CategoryModalProps> = ({
             placeholder="e.g., Gym, Pet Care, Freelance Project"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:outline-hidden focus:ring-2 focus:ring-blue-500"
+            className="w-full px-3.5 py-3 sm:py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:outline-hidden focus:ring-2 focus:ring-blue-500 text-base sm:text-sm"
           />
         </div>
 
@@ -142,14 +142,14 @@ export const CategoryModal: React.FC<CategoryModalProps> = ({
           <label className="block text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1.5">
             Color
           </label>
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap gap-2.5">
             {PRESET_COLORS.map((c) => (
               <button
                 key={c}
                 type="button"
                 onClick={() => setColor(c)}
                 style={{ backgroundColor: c }}
-                className={`w-7 h-7 rounded-full transition-transform ${
+                className={`w-8 h-8 sm:w-7 sm:h-7 rounded-full transition-transform active:scale-95 ${
                   color === c ? 'ring-2 ring-offset-2 ring-slate-900 dark:ring-white scale-110' : ''
                 }`}
               />
@@ -167,7 +167,7 @@ export const CategoryModal: React.FC<CategoryModalProps> = ({
                 key={ic}
                 type="button"
                 onClick={() => setIcon(ic)}
-                className={`p-2 rounded-lg flex items-center justify-center transition-colors ${
+                className={`p-2.5 sm:p-2 min-h-[40px] rounded-lg flex items-center justify-center transition-colors active:scale-95 ${
                   icon === ic
                     ? 'bg-blue-600 text-white shadow-xs'
                     : 'text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700'
@@ -183,13 +183,13 @@ export const CategoryModal: React.FC<CategoryModalProps> = ({
           <button
             type="button"
             onClick={onClose}
-            className="px-4 py-2 text-sm font-medium rounded-xl text-slate-700 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
+            className="flex-1 sm:flex-initial px-4 py-2.5 sm:py-2 text-sm font-medium rounded-xl text-slate-700 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
           >
             Cancel
           </button>
           <button
             type="submit"
-            className="px-5 py-2 text-sm font-semibold rounded-xl text-white bg-blue-600 hover:bg-blue-700 shadow-xs transition-colors"
+            className="flex-1 sm:flex-initial px-5 py-2.5 sm:py-2 text-sm font-semibold rounded-xl text-white bg-blue-600 hover:bg-blue-700 shadow-xs transition-colors"
           >
             Create Category
           </button>

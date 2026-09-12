@@ -58,7 +58,6 @@ export const Dashboard: React.FC = () => {
     recentTransactions,
     settings,
     categories,
-    loadSampleData,
   } = useFinance();
 
   // Category expenses for selected month
@@ -102,8 +101,8 @@ export const Dashboard: React.FC = () => {
           title="No Transactions Recorded"
           description="Start logging your income and expenses to unlock insights, category breakdowns, and budget tracking."
           action={{
-            label: 'Load Sample Data',
-            onClick: loadSampleData,
+            label: '+ Add First Transaction',
+            onClick: openAddModal,
           }}
         />
       ) : (

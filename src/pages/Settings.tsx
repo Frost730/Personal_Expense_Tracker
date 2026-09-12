@@ -8,7 +8,6 @@ import {
   Download,
   Upload,
   Trash2,
-  Sparkles,
   ShieldCheck,
   Tag,
   Plus,
@@ -40,7 +39,6 @@ export const Settings: React.FC = () => {
     exportDataToFile,
     exportTransactionsCSV,
     importDataFromFile,
-    loadSampleData,
     clearAllData,
     transactions,
   } = useFinance();
@@ -50,7 +48,6 @@ export const Settings: React.FC = () => {
   const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
   const [isClearConfirmOpen, setIsClearConfirmOpen] = useState(false);
   const [isImportConfirmOpen, setIsImportConfirmOpen] = useState(false);
-  const [isLoadSampleConfirmOpen, setIsLoadSampleConfirmOpen] = useState(false);
   const [pendingImportJson, setPendingImportJson] = useState<string | null>(null);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -244,15 +241,7 @@ export const Settings: React.FC = () => {
               />
             </div>
 
-            <div className="pt-3 border-t border-slate-100 dark:border-slate-800 flex flex-wrap items-center justify-between gap-2">
-              <button
-                onClick={() => setIsLoadSampleConfirmOpen(true)}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
-              >
-                <Sparkles className="w-3.5 h-3.5 text-blue-500" />
-                <span>Reload Demo Sample Data</span>
-              </button>
-
+            <div className="pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-end">
               <button
                 onClick={() => setIsClearConfirmOpen(true)}
                 className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/40 transition-colors"
@@ -433,17 +422,6 @@ export const Settings: React.FC = () => {
         message="Are you completely sure? This will permanently delete all your transactions, custom categories, and budgets from this browser. Consider exporting a backup first."
         confirmText="Yes, Clear All"
         isDestructive={true}
-      />
-
-      {/* Load Sample Data Confirmation Dialog */}
-      <ConfirmDialog
-        isOpen={isLoadSampleConfirmOpen}
-        onClose={() => setIsLoadSampleConfirmOpen(false)}
-        onConfirm={loadSampleData}
-        title="Reload Demo Sample Data"
-        message="This will overwrite current transactions with fresh realistic demo data for testing."
-        confirmText="Load Sample Data"
-        isDestructive={false}
       />
 
       {/* Import Confirmation Dialog */}

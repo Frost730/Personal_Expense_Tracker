@@ -110,7 +110,7 @@ export const Analytics: React.FC = () => {
         <EmptyState
           icon={<BarChart3 className="w-8 h-8 text-blue-500" />}
           title="No Analytics Available"
-          description="Log some transactions or load demo data to view charts and statistics."
+          description="Log your first transactions to view spending charts, trends, and statistics."
         />
       ) : (
         <>

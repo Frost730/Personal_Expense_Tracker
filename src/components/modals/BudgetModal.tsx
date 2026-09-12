@@ -81,7 +81,7 @@ export const BudgetModal: React.FC<BudgetModalProps> = ({
             value={category}
             onChange={(e) => setCategory(e.target.value)}
             disabled={!!editBudget}
-            className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:outline-hidden focus:ring-2 focus:ring-blue-500 disabled:opacity-60 capitalize"
+            className="w-full px-3.5 py-3 sm:py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:outline-hidden focus:ring-2 focus:ring-blue-500 disabled:opacity-60 capitalize text-base sm:text-sm"
           >
             {expenseCategories.map((cat) => (
               <option key={cat.id} value={cat.name}>
@@ -100,7 +100,7 @@ export const BudgetModal: React.FC<BudgetModalProps> = ({
             required
             value={month}
             onChange={(e) => setMonth(e.target.value)}
-            className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:outline-hidden focus:ring-2 focus:ring-blue-500"
+            className="w-full px-3.5 py-3 sm:py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:outline-hidden focus:ring-2 focus:ring-blue-500 text-base sm:text-sm"
           />
         </div>
 
@@ -116,7 +116,7 @@ export const BudgetModal: React.FC<BudgetModalProps> = ({
             placeholder="500.00"
             value={amount}
             onChange={(e) => setAmount(e.target.value)}
-            className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:outline-hidden focus:ring-2 focus:ring-blue-500 font-medium"
+            className="w-full px-3.5 py-3 sm:py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:outline-hidden focus:ring-2 focus:ring-blue-500 font-medium text-base sm:text-sm"
           />
         </div>
 
@@ -124,13 +124,13 @@ export const BudgetModal: React.FC<BudgetModalProps> = ({
           <button
             type="button"
             onClick={onClose}
-            className="px-4 py-2 text-sm font-medium rounded-xl text-slate-700 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
+            className="flex-1 sm:flex-initial px-4 py-2.5 sm:py-2 text-sm font-medium rounded-xl text-slate-700 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
           >
             Cancel
           </button>
           <button
             type="submit"
-            className="px-5 py-2 text-sm font-semibold rounded-xl text-white bg-blue-600 hover:bg-blue-700 shadow-xs transition-colors"
+            className="flex-1 sm:flex-initial px-5 py-2.5 sm:py-2 text-sm font-semibold rounded-xl text-white bg-blue-600 hover:bg-blue-700 shadow-xs transition-colors"
           >
             {editBudget ? 'Save Target' : 'Set Budget'}
           </button>

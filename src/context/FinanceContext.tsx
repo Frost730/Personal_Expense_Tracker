@@ -85,12 +85,7 @@ const FinanceContext = createContext<FinanceContextType | undefined>(undefined);
 
 export const FinanceProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [transactions, setTransactions] = useState<Transaction[]>(() => {
-    const existing = storageService.getTransactions();
-    if (!storageService.isInitialized() && existing.length === 0) {
-      const sample = storageService.loadSampleData();
-      return sample.transactions;
-    }
-    return existing;
+    return storageService.getTransactions();
   });
 
   const [budgets, setBudgets] = useState<Budget[]>(() => {
