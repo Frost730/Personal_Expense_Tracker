@@ -19,7 +19,7 @@ import { usePWA } from '../../hooks/usePWA';
 
 export const Sidebar: React.FC = () => {
   const { totalBalance, settings, setTheme } = useFinance();
-  const { isInstallable, installApp } = usePWA();
+  const { isInstalled, installApp } = usePWA();
 
   const navItems = [
     { to: '/', label: 'Dashboard', icon: LayoutDashboard },
@@ -95,13 +95,13 @@ export const Sidebar: React.FC = () => {
 
       {/* Footer controls: PWA install, theme & local storage notice */}
       <div className="space-y-3 pt-4 border-t border-slate-100 dark:border-slate-800">
-        {isInstallable && (
+        {!isInstalled && (
           <button
-            onClick={installApp}
-            className="w-full flex items-center justify-center gap-2 px-3.5 py-2.5 rounded-xl text-xs font-semibold text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 transition-all shadow-xs"
+            onClick={() => installApp()}
+            className="w-full flex items-center justify-center gap-2 px-3.5 py-2.5 rounded-xl text-xs font-semibold text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 active:scale-95 transition-all shadow-xs"
           >
             <Smartphone className="w-4 h-4" />
-            <span>Install App</span>
+            <span>Download App</span>
           </button>
         )}
 

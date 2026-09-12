@@ -4,6 +4,7 @@ import { Sidebar } from './Sidebar';
 import { MobileNav } from './MobileNav';
 import { ToastContainer } from '../common/ToastContainer';
 import { TransactionModal } from '../modals/TransactionModal';
+import { PWAInstallBanner } from '../common/PWAInstallBanner';
 
 export const Layout: React.FC = () => {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
@@ -22,6 +23,9 @@ export const Layout: React.FC = () => {
 
       {/* Mobile Navigation */}
       <MobileNav onOpenAddModal={() => setIsAddModalOpen(true)} />
+
+      {/* Mobile PWA Install Floating Banner & Guide Modal */}
+      <PWAInstallBanner />
 
       {/* Global Add Transaction Modal */}
       <TransactionModal

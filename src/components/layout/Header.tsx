@@ -1,6 +1,7 @@
 import React from 'react';
-import { Plus, Calendar, RotateCcw } from 'lucide-react';
+import { Plus, Calendar, RotateCcw, Download } from 'lucide-react';
 import { useFinance } from '../../context/FinanceContext';
+import { usePWA } from '../../hooks/usePWA';
 import { getLocalCurrentMonth } from '../../utils/formatters';
 
 interface HeaderProps {
@@ -17,6 +18,7 @@ export const Header: React.FC<HeaderProps> = ({
   showMonthPicker = true,
 }) => {
   const { selectedMonth, setSelectedMonth, settings } = useFinance();
+  const { isInstalled, installApp } = usePWA();
 
   const handleResetToCurrentMonth = () => {
     setSelectedMonth(getLocalCurrentMonth());
@@ -64,9 +66,21 @@ export const Header: React.FC<HeaderProps> = ({
           {settings.currency}
         </div>
 
+        {!isInstalled && (
+          <button
+            onClick={() => installApp()}
+            title="Download & Install App"
+            className="inline-flex items-center gap-1.5 px-3 py-2 text-xs sm:text-sm font-semibold rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 border border-slate-200/80 dark:border-slate-700 active:scale-95 transition-all shrink-0 ml-auto sm:ml-0"
+          >
+            <Download className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-blue-600 dark:text-blue-400 shrink-0" />
+            <span className="hidden xs:inline">Download</span>
+            <span className="hidden sm:inline">App</span>
+          </button>
+        )}
+
         <button
           onClick={onOpenAddModal}
-          className="inline-flex items-center gap-1.5 px-3 sm:px-4 py-2 text-xs sm:text-sm font-semibold rounded-xl text-white bg-blue-600 hover:bg-blue-700 shadow-sm shadow-blue-500/20 active:scale-95 transition-all shrink-0 ml-auto sm:ml-0"
+          className="inline-flex items-center gap-1.5 px-3 sm:px-4 py-2 text-xs sm:text-sm font-semibold rounded-xl text-white bg-blue-600 hover:bg-blue-700 shadow-sm shadow-blue-500/20 active:scale-95 transition-all shrink-0"
         >
           <Plus className="w-4 h-4 shrink-0" />
           <span>Add <span className="hidden sm:inline">Transaction</span></span>

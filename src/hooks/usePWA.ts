@@ -9,64 +9,102 @@ interface BeforeInstallPromptEvent extends Event {
   prompt(): Promise<void>;
 }
 
+// Module-level deferredPrompt to catch early events before components mount
+let globalDeferredPrompt: BeforeInstallPromptEvent | null = null;
+const listeners = new Set<() => void>();
+
+function notifyListeners() {
+  listeners.forEach((fn) => fn());
+}
+
+if (typeof window !== 'undefined') {
+  window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    globalDeferredPrompt = e as BeforeInstallPromptEvent;
+    notifyListeners();
+  });
+
+  window.addEventListener('appinstalled', () => {
+    globalDeferredPrompt = null;
+    notifyListeners();
+  });
+}
+
 export function usePWA() {
-  const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
+  const [hasPrompt, setHasPrompt] = useState<boolean>(!!globalDeferredPrompt);
   const [isInstalled, setIsInstalled] = useState(false);
-  const [isInstallable, setIsInstallable] = useState(false);
+  const [isInstallModalOpen, setIsInstallModalOpen] = useState(false);
+
+  const isIOS =
+    typeof navigator !== 'undefined' &&
+    (/iPad|iPhone|iPod/.test(navigator.userAgent) ||
+      (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1));
 
   useEffect(() => {
-    // Check if app is already running in standalone mode (installed)
-    const isStandalone =
-      window.matchMedia('(display-mode: standalone)').matches ||
-      (window.navigator as any).standalone === true;
-
-    setIsInstalled(isStandalone);
-
-    const handleBeforeInstallPrompt = (e: Event) => {
-      e.preventDefault();
-      setDeferredPrompt(e as BeforeInstallPromptEvent);
-      setIsInstallable(true);
+    const checkStandalone = () => {
+      const isStandalone =
+        window.matchMedia('(display-mode: standalone)').matches ||
+        (window.navigator as unknown as { standalone?: boolean }).standalone === true ||
+        document.referrer.includes('android-app://');
+      setIsInstalled(isStandalone);
     };
 
-    const handleAppInstalled = () => {
-      setIsInstalled(true);
-      setIsInstallable(false);
-      setDeferredPrompt(null);
+    checkStandalone();
+
+    const updatePrompt = () => {
+      setHasPrompt(!!globalDeferredPrompt);
+      checkStandalone();
     };
 
-    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
-    window.addEventListener('appinstalled', handleAppInstalled);
+    const handleOpenModal = () => {
+      setIsInstallModalOpen(true);
+    };
+
+    listeners.add(updatePrompt);
+    window.addEventListener('open-pwa-install', handleOpenModal);
 
     return () => {
-      window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
-      window.removeEventListener('appinstalled', handleAppInstalled);
+      listeners.delete(updatePrompt);
+      window.removeEventListener('open-pwa-install', handleOpenModal);
     };
   }, []);
 
-  const installApp = async (): Promise<boolean> => {
-    if (!deferredPrompt) {
-      return false;
-    }
+  const isInstallable = hasPrompt;
 
-    try {
-      await deferredPrompt.prompt();
-      const choiceResult = await deferredPrompt.userChoice;
-      if (choiceResult.outcome === 'accepted') {
-        setIsInstalled(true);
-        setIsInstallable(false);
-        setDeferredPrompt(null);
-        return true;
+  const openInstallGuide = () => {
+    window.dispatchEvent(new CustomEvent('open-pwa-install'));
+  };
+
+  const installApp = async (): Promise<'installed' | 'manual' | 'dismissed'> => {
+    if (globalDeferredPrompt) {
+      try {
+        await globalDeferredPrompt.prompt();
+        const choice = await globalDeferredPrompt.userChoice;
+        if (choice.outcome === 'accepted') {
+          globalDeferredPrompt = null;
+          setHasPrompt(false);
+          setIsInstalled(true);
+          return 'installed';
+        }
+        return 'dismissed';
+      } catch (err) {
+        console.error('[PWA] Error launching install prompt:', err);
+        openInstallGuide();
+        return 'manual';
       }
-      return false;
-    } catch (err) {
-      console.error('[PWA] Error during install prompt:', err);
-      return false;
+    } else {
+      openInstallGuide();
+      return 'manual';
     }
   };
 
   return {
     isInstallable,
     isInstalled,
+    isIOS,
     installApp,
+    openInstallGuide,
+    isInstallModalOpen,
+    setIsInstallModalOpen,
   };
 }

@@ -13,6 +13,7 @@ import {
   Plus,
   Info,
   Smartphone,
+  CheckCircle2,
 } from 'lucide-react';
 import { useFinance } from '../context/FinanceContext';
 import { Header } from '../components/layout/Header';
@@ -43,7 +44,7 @@ export const Settings: React.FC = () => {
     transactions,
   } = useFinance();
 
-  const { isInstallable, isInstalled, installApp } = usePWA();
+  const { isInstalled, installApp } = usePWA();
 
   const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
   const [isClearConfirmOpen, setIsClearConfirmOpen] = useState(false);
@@ -352,25 +353,23 @@ export const Settings: React.FC = () => {
               </div>
 
               {isInstalled ? (
-                <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-50 dark:bg-emerald-950/50 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
+                <span className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-semibold bg-emerald-50 dark:bg-emerald-950/50 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
+                  <CheckCircle2 className="w-3.5 h-3.5" />
                   Installed
                 </span>
-              ) : isInstallable ? (
-                <button
-                  onClick={installApp}
-                  className="px-3 py-1.5 rounded-xl text-xs font-semibold text-white bg-blue-600 hover:bg-blue-700 transition-colors shadow-xs"
-                >
-                  Install Now
-                </button>
               ) : (
-                <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">
-                  Offline Ready
-                </span>
+                <button
+                  onClick={() => installApp()}
+                  className="px-3.5 py-2 rounded-xl text-xs font-semibold text-white bg-blue-600 hover:bg-blue-700 active:scale-95 transition-all shadow-xs flex items-center gap-1.5 shrink-0"
+                >
+                  <Download className="w-3.5 h-3.5" />
+                  <span>Download App</span>
+                </button>
               )}
             </div>
 
             <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
-              This application is equipped with a background service worker. All pages, scripts, charts, and icons are precached, allowing the app to open instantly even when completely disconnected from the internet.
+              This application is equipped with a background service worker. All pages, scripts, charts, and icons are precached, allowing the app to open instantly even when completely disconnected from the internet. Tap "Download App" above to install directly to your device launcher.
             </p>
           </Card>
 
