@@ -109,9 +109,18 @@ export const FinanceProvider: React.FC<{ children: ReactNode }> = ({ children })
     const applyDark = (isDark: boolean) => {
       if (isDark) {
         root.classList.add('dark');
+        root.style.backgroundColor = '#0b0f19';
+        root.style.colorScheme = 'dark';
       } else {
         root.classList.remove('dark');
+        root.style.backgroundColor = '#f8fafc';
+        root.style.colorScheme = 'light';
       }
+
+      const themeColors = document.querySelectorAll('meta[name="theme-color"]');
+      themeColors.forEach((meta) => {
+        meta.setAttribute('content', isDark ? '#0b0f19' : '#f8fafc');
+      });
     };
 
     if (settings.theme === 'dark') {
