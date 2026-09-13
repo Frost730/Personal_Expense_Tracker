@@ -57,6 +57,7 @@ interface FinanceContextType {
   setTheme: (theme: ThemeMode) => void;
   
   // Data management
+  refreshData: () => void;
   loadSampleData: () => void;
   clearAllData: () => void;
   exportDataToFile: () => void;
@@ -244,6 +245,13 @@ export const FinanceProvider: React.FC<{ children: ReactNode }> = ({ children })
     showToast(`Theme switched to ${theme}`, 'info');
   };
 
+  const refreshData = () => {
+    setTransactions(storageService.getTransactions());
+    setBudgets(storageService.getBudgets());
+    setCategories(storageService.getCategories());
+    setSettings(storageService.getSettings());
+  };
+
   const loadSampleData = () => {
     const sample = storageService.loadSampleData();
     setTransactions(sample.transactions);
@@ -374,6 +382,7 @@ export const FinanceProvider: React.FC<{ children: ReactNode }> = ({ children })
       updateSettings,
       setCurrency,
       setTheme,
+      refreshData,
       loadSampleData,
       clearAllData,
       exportDataToFile,

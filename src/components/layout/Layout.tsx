@@ -6,9 +6,12 @@ import { ToastContainer } from '../common/ToastContainer';
 import { TransactionModal } from '../modals/TransactionModal';
 import { PWAInstallBanner } from '../common/PWAInstallBanner';
 import { PageSkeleton } from '../common/PageSkeleton';
+import { PullToRefresh } from '../common/PullToRefresh';
+import { useFinance } from '../../context/FinanceContext';
 
 export const Layout: React.FC = () => {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const { refreshData } = useFinance();
 
   return (
     <div className="min-h-screen flex bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 transition-colors">
@@ -18,9 +21,13 @@ export const Layout: React.FC = () => {
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col min-w-0 pb-28 md:pb-8">
         <main className="flex-1 p-3.5 sm:p-6 md:p-8 max-w-7xl mx-auto w-full">
-          <Suspense fallback={<PageSkeleton />}>
-            <Outlet context={{ openAddModal: () => setIsAddModalOpen(true) }} />
-          </Suspense>
+          <PullToRefresh onRefresh={refreshData}>
+            <Suspense fallback={<PageSkeleton />}>
+              <div className="animate-in fade-in-50 duration-200">
+                <Outlet context={{ openAddModal: () => setIsAddModalOpen(true) }} />
+              </div>
+            </Suspense>
+          </PullToRefresh>
         </main>
       </div>
 
