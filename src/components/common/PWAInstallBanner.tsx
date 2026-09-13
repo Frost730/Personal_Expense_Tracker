@@ -57,8 +57,8 @@ export const PWAInstallBanner: React.FC = () => {
 
   return (
     <>
-      {/* Mobile Floating Install Banner (fixed right above the mobile bottom nav) */}
-      <div className="md:hidden fixed bottom-18 left-3 right-3 z-40 animate-in slide-in-from-bottom duration-300">
+      {/* Mobile Floating Install Banner (fixed right above the mobile bottom nav with safe-area spacing) */}
+      <div className="md:hidden fixed bottom-[calc(4.75rem+env(safe-area-inset-bottom))] left-3 right-3 z-35 animate-in slide-in-from-bottom duration-300">
         <div className="bg-slate-900/95 dark:bg-slate-800/95 backdrop-blur-md text-white px-3.5 py-3 rounded-2xl shadow-xl border border-slate-700/60 flex items-center justify-between gap-3">
           <div className="flex items-center gap-2.5 min-w-0">
             <div className="w-9 h-9 rounded-xl bg-blue-600 flex items-center justify-center shrink-0 shadow-sm shadow-blue-500/30">
