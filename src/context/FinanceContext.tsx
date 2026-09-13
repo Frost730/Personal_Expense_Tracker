@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect, useMemo, type ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect, useMemo, useCallback, type ReactNode } from 'react';
 import type {
   Transaction,
   Budget,
@@ -141,144 +141,159 @@ export const FinanceProvider: React.FC<{ children: ReactNode }> = ({ children })
     }
   }, [settings.theme]);
 
-  const showToast = (message: string, type: ToastMessage['type'] = 'success') => {
+  const showToast = useCallback((message: string, type: ToastMessage['type'] = 'success') => {
     const id = `toast-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`;
     setToasts((prev) => [...prev, { id, message, type }]);
 
     setTimeout(() => {
       setToasts((prev) => prev.filter((t) => t.id !== id));
     }, 4000);
-  };
+  }, []);
 
-  const dismissToast = (id: string) => {
+  const dismissToast = useCallback((id: string) => {
     setToasts((prev) => prev.filter((t) => t.id !== id));
-  };
+  }, []);
 
-  const addTransaction = (data: Omit<Transaction, 'id' | 'createdAt'>): Transaction => {
+  const addTransaction = useCallback((data: Omit<Transaction, 'id' | 'createdAt'>): Transaction => {
     const newTx: Transaction = {
       ...data,
       id: `tx-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
       createdAt: new Date().toISOString(),
     };
 
-    const updated = [newTx, ...transactions];
-    setTransactions(updated);
-    storageService.saveTransactions(updated);
+    setTransactions((prev) => {
+      const updated = [newTx, ...prev];
+      storageService.saveTransactions(updated);
+      return updated;
+    });
     showToast(`Added ${data.type === 'income' ? 'income' : 'expense'}: "${data.description}"`, 'success');
     return newTx;
-  };
+  }, [showToast]);
 
-  const updateTransaction = (id: string, data: Partial<Transaction>) => {
-    const updated = transactions.map((tx) => (tx.id === id ? { ...tx, ...data } : tx));
-    setTransactions(updated);
-    storageService.saveTransactions(updated);
+  const updateTransaction = useCallback((id: string, data: Partial<Transaction>) => {
+    setTransactions((prev) => {
+      const updated = prev.map((tx) => (tx.id === id ? { ...tx, ...data } : tx));
+      storageService.saveTransactions(updated);
+      return updated;
+    });
     showToast('Transaction updated successfully', 'success');
-  };
+  }, [showToast]);
 
-  const deleteTransaction = (id: string) => {
-    const target = transactions.find((tx) => tx.id === id);
-    const updated = transactions.filter((tx) => tx.id !== id);
-    setTransactions(updated);
-    storageService.saveTransactions(updated);
-    showToast(`Deleted "${target?.description || 'Transaction'}"`, 'info');
-  };
+  const deleteTransaction = useCallback((id: string) => {
+    setTransactions((prev) => {
+      const target = prev.find((tx) => tx.id === id);
+      const updated = prev.filter((tx) => tx.id !== id);
+      storageService.saveTransactions(updated);
+      showToast(`Deleted "${target?.description || 'Transaction'}"`, 'info');
+      return updated;
+    });
+  }, [showToast]);
 
-  const saveBudget = (category: string, amount: number, month: string) => {
-    const existingIndex = budgets.findIndex(
-      (b) => b.category.toLowerCase() === category.toLowerCase() && b.month === month
-    );
+  const saveBudget = useCallback((category: string, amount: number, month: string) => {
+    setBudgets((prev) => {
+      const existingIndex = prev.findIndex(
+        (b) => b.category.toLowerCase() === category.toLowerCase() && b.month === month
+      );
 
-    let updated: Budget[];
-    if (existingIndex >= 0) {
-      updated = [...budgets];
-      updated[existingIndex] = { ...updated[existingIndex], amount };
-    } else {
-      const newBudget: Budget = {
-        id: `b-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
-        category,
-        amount,
-        month,
-      };
-      updated = [...budgets, newBudget];
-    }
-
-    setBudgets(updated);
-    storageService.saveBudgets(updated);
+      let updated: Budget[];
+      if (existingIndex >= 0) {
+        updated = [...prev];
+        updated[existingIndex] = { ...updated[existingIndex], amount };
+      } else {
+        const newBudget: Budget = {
+          id: `b-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
+          category,
+          amount,
+          month,
+        };
+        updated = [...prev, newBudget];
+      }
+      storageService.saveBudgets(updated);
+      return updated;
+    });
     showToast(`Budget for ${category} updated to ${amount}`, 'success');
-  };
+  }, [showToast]);
 
-  const deleteBudget = (id: string) => {
-    const updated = budgets.filter((b) => b.id !== id);
-    setBudgets(updated);
-    storageService.saveBudgets(updated);
+  const deleteBudget = useCallback((id: string) => {
+    setBudgets((prev) => {
+      const updated = prev.filter((b) => b.id !== id);
+      storageService.saveBudgets(updated);
+      return updated;
+    });
     showToast('Budget goal removed', 'info');
-  };
+  }, [showToast]);
 
-  const addCategory = (data: Omit<Category, 'id'>) => {
+  const addCategory = useCallback((data: Omit<Category, 'id'>) => {
     const newCat: Category = {
       ...data,
       id: `cat-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
       isDefault: false,
     };
-    const updated = [...categories, newCat];
-    setCategories(updated);
-    storageService.saveCategories(updated);
+    setCategories((prev) => {
+      const updated = [...prev, newCat];
+      storageService.saveCategories(updated);
+      return updated;
+    });
     showToast(`Created category "${data.name}"`, 'success');
-  };
+  }, [showToast]);
 
-  const deleteCategory = (id: string) => {
-    const target = categories.find((c) => c.id === id);
-    if (target?.isDefault) {
-      showToast('Cannot delete system default categories', 'warning');
-      return;
-    }
-    const updated = categories.filter((c) => c.id !== id);
-    setCategories(updated);
-    storageService.saveCategories(updated);
-    showToast(`Removed category "${target?.name || ''}"`, 'info');
-  };
+  const deleteCategory = useCallback((id: string) => {
+    setCategories((prev) => {
+      const target = prev.find((c) => c.id === id);
+      if (target?.isDefault) {
+        showToast('Cannot delete system default categories', 'warning');
+        return prev;
+      }
+      const updated = prev.filter((c) => c.id !== id);
+      storageService.saveCategories(updated);
+      showToast(`Removed category "${target?.name || ''}"`, 'info');
+      return updated;
+    });
+  }, [showToast]);
 
-  const updateSettings = (newSettings: Partial<Settings>) => {
-    const updated = { ...settings, ...newSettings };
-    setSettings(updated);
-    storageService.saveSettings(updated);
-  };
+  const updateSettings = useCallback((newSettings: Partial<Settings>) => {
+    setSettings((prev) => {
+      const updated = { ...prev, ...newSettings };
+      storageService.saveSettings(updated);
+      return updated;
+    });
+  }, []);
 
-  const setCurrency = (currency: string) => {
+  const setCurrency = useCallback((currency: string) => {
     updateSettings({ currency });
     showToast(`Currency changed to ${currency}`, 'info');
-  };
+  }, [updateSettings, showToast]);
 
-  const setTheme = (theme: ThemeMode) => {
+  const setTheme = useCallback((theme: ThemeMode) => {
     updateSettings({ theme });
     showToast(`Theme switched to ${theme}`, 'info');
-  };
+  }, [updateSettings, showToast]);
 
-  const refreshData = () => {
+  const refreshData = useCallback(() => {
     setTransactions(storageService.getTransactions());
     setBudgets(storageService.getBudgets());
     setCategories(storageService.getCategories());
     setSettings(storageService.getSettings());
-  };
+  }, []);
 
-  const loadSampleData = () => {
+  const loadSampleData = useCallback(() => {
     const sample = storageService.loadSampleData();
     setTransactions(sample.transactions);
     setBudgets(sample.budgets);
     setCategories(sample.categories);
     showToast('Sample financial data loaded successfully', 'success');
-  };
+  }, [showToast]);
 
-  const clearAllData = () => {
+  const clearAllData = useCallback(() => {
     storageService.clearAllData();
     setTransactions([]);
     setBudgets([]);
     setCategories(DEFAULT_CATEGORIES);
     setSettings(DEFAULT_SETTINGS);
     showToast('All transaction and budget data has been cleared', 'warning');
-  };
+  }, [showToast]);
 
-  const exportDataToFile = () => {
+  const exportDataToFile = useCallback(() => {
     const data = storageService.exportAllData();
     const jsonStr = JSON.stringify(data, null, 2);
     const blob = new Blob([jsonStr], { type: 'application/json' });
@@ -291,18 +306,18 @@ export const FinanceProvider: React.FC<{ children: ReactNode }> = ({ children })
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
     showToast('Backup file downloaded successfully', 'success');
-  };
+  }, [showToast]);
 
-  const exportTransactionsCSV = () => {
+  const exportTransactionsCSV = useCallback(() => {
     if (transactions.length === 0) {
       showToast('No transactions to export', 'info');
       return;
     }
     exportTransactionsToCSV(transactions, settings.currency);
     showToast('Transactions exported to CSV successfully', 'success');
-  };
+  }, [transactions, settings.currency, showToast]);
 
-  const importDataFromFile = async (jsonString: string): Promise<boolean> => {
+  const importDataFromFile = useCallback(async (jsonString: string): Promise<boolean> => {
     try {
       const parsed = JSON.parse(jsonString);
       const validation = storageService.validateImportData(parsed);
@@ -325,7 +340,7 @@ export const FinanceProvider: React.FC<{ children: ReactNode }> = ({ children })
       showToast(err.message || 'Failed to parse JSON backup file', 'error');
       return false;
     }
-  };
+  }, [showToast]);
 
   const totalBalance = useMemo(() => calculateTotalBalance(transactions), [transactions]);
   const totalAllTimeIncome = useMemo(() => calculateTotalIncome(transactions), [transactions]);
@@ -429,6 +444,24 @@ export const FinanceProvider: React.FC<{ children: ReactNode }> = ({ children })
       totalMonthlyBudget,
       remainingMonthlyBudget,
       recentTransactions,
+      addTransaction,
+      updateTransaction,
+      deleteTransaction,
+      saveBudget,
+      deleteBudget,
+      addCategory,
+      deleteCategory,
+      updateSettings,
+      setCurrency,
+      setTheme,
+      refreshData,
+      loadSampleData,
+      clearAllData,
+      exportDataToFile,
+      exportTransactionsCSV,
+      importDataFromFile,
+      showToast,
+      dismissToast,
     ]
   );
 

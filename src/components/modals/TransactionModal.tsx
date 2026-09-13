@@ -31,6 +31,7 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
   const availableCategories = categories.filter((c) => c.type === type);
 
   useEffect(() => {
+    if (!isOpen) return;
     if (editTransaction) {
       setType(editTransaction.type);
       setAmount(String(editTransaction.amount));

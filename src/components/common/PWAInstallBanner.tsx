@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Download, X, Smartphone } from 'lucide-react';
 import { usePWA } from '../../hooks/usePWA';
 import { InstallModal } from './InstallModal';
@@ -8,25 +8,19 @@ const DISMISS_COOLDOWN_DAYS = 3;
 
 export const PWAInstallBanner: React.FC = () => {
   const { isInstalled, isIOS, installApp, isInstallModalOpen, setIsInstallModalOpen } = usePWA();
-  const [isDismissed, setIsDismissed] = useState(true);
-
-  useEffect(() => {
-    // Check if dismissed recently
+  const [isDismissed, setIsDismissed] = useState(() => {
     try {
       const dismissedAt = localStorage.getItem(DISMISS_KEY);
       if (dismissedAt) {
         const diffDays =
           (Date.now() - parseInt(dismissedAt, 10)) / (1000 * 60 * 60 * 24);
-        if (diffDays < DISMISS_COOLDOWN_DAYS) {
-          setIsDismissed(true);
-          return;
-        }
+        return diffDays < DISMISS_COOLDOWN_DAYS;
       }
-      setIsDismissed(false);
+      return false;
     } catch {
-      setIsDismissed(false);
+      return false;
     }
-  }, []);
+  });
 
   const handleDismiss = () => {
     setIsDismissed(true);

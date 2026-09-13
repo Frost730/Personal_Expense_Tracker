@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Plus, Calendar, RotateCcw, Download, RefreshCw } from 'lucide-react';
+import { Plus, Calendar, RotateCcw, Download } from 'lucide-react';
 import { useFinance } from '../../context/FinanceContext';
 import { usePWA } from '../../hooks/usePWA';
 import { getLocalCurrentMonth } from '../../utils/formatters';
@@ -17,23 +17,14 @@ export const Header: React.FC<HeaderProps> = ({
   onOpenAddModal,
   showMonthPicker = true,
 }) => {
-  const { selectedMonth, setSelectedMonth, settings, refreshData, showToast } = useFinance();
+  const { selectedMonth, setSelectedMonth, settings } = useFinance();
   const { isInstalled, installApp } = usePWA();
-  const [isRefreshing, setIsRefreshing] = useState(false);
   const [isResettingMonth, setIsResettingMonth] = useState(false);
 
   const handleResetToCurrentMonth = () => {
     setIsResettingMonth(true);
     setSelectedMonth(getLocalCurrentMonth());
     setTimeout(() => setIsResettingMonth(false), 600);
-  };
-
-  const handleManualRefresh = () => {
-    if (isRefreshing) return;
-    setIsRefreshing(true);
-    refreshData();
-    showToast('Data refreshed successfully', 'info');
-    setTimeout(() => setIsRefreshing(false), 750);
   };
 
   const isCurrentMonth = selectedMonth === getLocalCurrentMonth();
@@ -74,20 +65,6 @@ export const Header: React.FC<HeaderProps> = ({
               )}
             </div>
           )}
-
-          {/* Dedicated manual refresh button */}
-          <button
-            onClick={handleManualRefresh}
-            title="Refresh application data"
-            aria-label="Refresh application data"
-            className="p-2 rounded-xl bg-white dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-slate-800 active:scale-95 transition-all shadow-xs shrink-0"
-          >
-            <RefreshCw
-              className={`w-3.5 h-3.5 transition-colors ${
-                isRefreshing ? 'animate-spin-smooth text-blue-600 dark:text-blue-400' : ''
-              }`}
-            />
-          </button>
         </div>
 
         <div className="hidden md:flex items-center px-2.5 py-1.5 text-xs font-semibold rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border border-slate-200/60 dark:border-slate-700/60 shrink-0">

@@ -25,14 +25,16 @@ export const BudgetModal: React.FC<BudgetModalProps> = ({
   const expenseCategories = categories.filter((c) => c.type === 'expense');
 
   useEffect(() => {
+    if (!isOpen) return;
     if (editBudget) {
       setCategory(editBudget.category);
       setAmount(String(editBudget.amount));
       setMonth(editBudget.month);
       setError('');
     } else {
-      if (expenseCategories.length > 0) {
-        setCategory(expenseCategories[0].name);
+      const firstExpense = categories.find((c) => c.type === 'expense');
+      if (firstExpense) {
+        setCategory(firstExpense.name);
       }
       setAmount('');
       setMonth(defaultMonth);
